@@ -82,30 +82,43 @@ class ImagesMerge(models.Model):
         im2 = im2.resize(size)
         # im1.show()
         # im2.show()
+
         src1 = np.array(im1)
         src2 = np.array(im2)
-        # Создаем маску для перехода
-        array = get_gradient_3d(1100, 585, (0, 0, 0), (255, 255, 255), (True, True, True))
+        # # Создаем маску для перехода
+        # array = get_gradient_3d(1100, 585, (0, 0, 0), (255, 255, 255), (True, True, True))
+        # mask_g = Image.fromarray(np.uint8(array))
+        # #mask_g.show()
 
+        # # Save MAsk to File
+        # blob_mask = BytesIO()
+        # mask_g.save(blob_mask, 'JPEG')
+        # self.mask.save('mask_file.jpeg', File(blob_mask), save=False)
+
+        # mask1 = np.array(mask_g)
+        # mask1 = mask1/255
+        # dst = src1 * mask1 + src2 * (1 - mask1)
+        # new_im = Image.fromarray(dst.astype(np.uint8))
+        # # new_im.show()
+        # # file_name = f'{uuid.uuid4()}.jpeg'
+
+        # v.2
+        mask = np.zeros_like(src)
+        array= cv2.rectangle(mask, (50, 50), (100, 200), (255, 255, 255), thickness=-1)
         mask_g = Image.fromarray(np.uint8(array))
-        #mask_g.show()
-        # Save MAsk to File
-        blob_mask = BytesIO()
-        mask_g.save(blob_mask, 'JPEG')
-        self.mask.save('mask_file.jpeg', File(blob_mask), save=False)
-
+        # mask_g.show()
         mask1 = np.array(mask_g)
-        mask1 = mask1/255
-
+        mask1 = mask1 / 255
         dst = src1 * mask1 + src2 * (1 - mask1)
 
         new_im = Image.fromarray(dst.astype(np.uint8))
-        # new_im.show()
-        # file_name = f'{uuid.uuid4()}.jpeg'
-        file_name = 'new_imag.jpeg'
 
+        # # Save MAsk to File
+        blob_mask = BytesIO()
+        mask_g.save(blob_mask, 'JPEG')
+        self.mask.save('mask_file.jpeg', File(blob_mask), save=False)
         # Save to ImageField
-
+        file_name = 'new_imag.jpeg'
         blob_file = BytesIO()
         new_im.save(blob_file, 'JPEG')
         self.image.save(file_name, File(blob_file), save=False)
