@@ -85,6 +85,7 @@ class ImagesMerge(models.Model):
 
         src1 = np.array(im1)
         src2 = np.array(im2)
+
         # # Создаем маску для перехода
         # array = get_gradient_3d(1100, 585, (0, 0, 0), (255, 255, 255), (True, True, True))
         # mask_g = Image.fromarray(np.uint8(array))
@@ -104,7 +105,7 @@ class ImagesMerge(models.Model):
 
         # v.2
         mask = np.zeros_like(src)
-        array= cv2.rectangle(mask, (50, 50), (100, 200), (255, 255, 255), thickness=-1)
+        array = cv2.rectangle(mask, (50, 50), (100, 200), (255, 255, 255), thickness=-1)
         mask_g = Image.fromarray(np.uint8(array))
         # mask_g.show()
         mask1 = np.array(mask_g)
