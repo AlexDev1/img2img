@@ -1,9 +1,8 @@
 # Register your models here.
 from django import forms
 from django.contrib import admin
-from django.utils.safestring import mark_safe
 
-from comp.models import ImagesMerge, MaskImg2Img
+from comp.models import ImagesMerge, MaskImg2Img, Image2Image
 
 
 @admin.register(MaskImg2Img)
@@ -20,7 +19,8 @@ class CustomChoiceField(forms.ModelChoiceField):
 
 
 class ImagesMergeAdminForm(forms.ModelForm):
-    mask_file = CustomChoiceField(widget=forms.RadioSelect, queryset=MaskImg2Img.objects.all())
+    mask_file = CustomChoiceField(widget=forms.RadioSelect(attrs={'class': 'form-check-input'}),
+                                  queryset=MaskImg2Img.objects.all())
 
     class Meta:
         model = ImagesMerge
@@ -33,3 +33,18 @@ class ImagesMergeAdmin(admin.ModelAdmin):
     list_display = ['image_tag']
     fields = ['im1', 'im2', 'mask_file', 'mask_tag', 'image_tag']
     readonly_fields = ('image_tag', 'mask_tag')
+
+
+
+@admin.register(Image2Image)
+class Image2ImageAdmin(admin.ModelAdmin):
+    list_display = ['image_tag']
+    # fields = ['im1', 'im2', 'image_tag']
+    readonly_fields = ('image_tag', )
+
+    fields = [
+        ('im1', 'im2'),
+        ('color', 'line_width', 'angle'),
+        'image_tag'
+    ]
+
